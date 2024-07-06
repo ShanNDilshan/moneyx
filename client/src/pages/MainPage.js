@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+ 
 
 export default function MainPage() {
-
+    
     //States for the home fields
 
     const [date , setDate] = useState(null);
@@ -13,6 +15,8 @@ export default function MainPage() {
     const [amountInSourceCurrency , setAmountInSourceCurrency ] = useState(0);
     //amount in target currency
     const [amountInTargetCurrency , setAmountInTargetCurrency ] = useState(0);
+    //Currency Names From API
+    const [currencyNames , setCurrencyNames ] = useState([]);
 
     //Form Submit Handle Method
      const handleSubmit = (e) =>{
@@ -23,6 +27,22 @@ export default function MainPage() {
             amountInSourceCurrency);
     }
 
+    //Get All Currency Names
+    useEffect(() => {
+    const getTheCurrencies = async () => {
+      try {
+        const responce = await axios.get(
+          "http://localhost:5000/getAllCurrencies"
+        );
+        setCurrencyNames(responce.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getTheCurrencies();
+  }, []);
+
+     
 
   return (
     <div>
@@ -62,8 +82,14 @@ export default function MainPage() {
                         type='text' 
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required 
                         >
-                            <option value=''>Select The source Currency</option>
-                            <option value='USD'>USD</option>
+                            <option value='None'>Select The source Currency</option>
+
+                           {Object.keys(currencyNames).map((currency) => (
+                                <option className=" p-1" key={currency} value={currency}>
+                                  {currencyNames[currency]}
+                                </option>
+                                     ))}
+                          
                         </select>
                         
                     </div>
@@ -81,7 +107,11 @@ export default function MainPage() {
                         type='text' class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         
                         <option value=''>Select The Target Currency</option>
-                        <option value='LKR'>LKR</option>
+                        {Object.keys(currencyNames).map((currency) => (
+                                <option className=" p-1" key={currency} value={currency}>
+                                  {currencyNames[currency]}
+                                </option>
+                                     ))}
 
                         </select>
                     </div>
