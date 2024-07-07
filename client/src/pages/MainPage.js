@@ -30,12 +30,17 @@ export default function MainPage() {
                     date , sourceCurrency , targetCurrency , amountInSourceCurrency, 
                 },
             });
-            const tRate = responce.data.rates[targetCurrency];
-            const sRate = responce.data.rates[sourceCurrency];
-            const tot = (tRate / sRate) * amountInSourceCurrency;
+            
+            
+            const tot = responce.data;
+            if(tot){
             setAmountInTargetCurrency(tot.toFixed(2));
             setIsLabelVisible(true); 
-            console.log(amountInTargetCurrency);
+            console.log(amountInTargetCurrency);  
+            } else {
+                console.log("Error occured")
+            }
+            
             //ToDo : Do the work
 
         }catch(err){
